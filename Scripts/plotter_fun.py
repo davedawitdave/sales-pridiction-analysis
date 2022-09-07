@@ -1,4 +1,4 @@
 
 
-Class Plotter:
+class Plotter:
       def
