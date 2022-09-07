@@ -25,8 +25,7 @@ class Summery:
             Load data from a dvc storage
         """
         try:
-            data = dvc.read(path=path,repo=repo, rev=rev)
-            df = pd.read_csv(io.StringIO(data),low_memory=low_memory)
-            return df
+            data = dvc.api.read(path=path,repo=repo, rev=rev)
+            df = pd.read_csv(io.StringIO(data),low_memory=False)
         except Exception as e:
             print("Something went wrong!",e)
