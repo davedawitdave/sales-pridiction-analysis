@@ -1,6 +1,6 @@
 from re import I
-from numpy import np
-from pandas import pd
+import numpy as np
+import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import Normalizer, MinMaxScaler, StandardScaler
@@ -204,6 +204,6 @@ class Cleaner:
             except Exception:
                 print(f'Failed to Fill {col} Data')
         return df
-        
+
 
 
