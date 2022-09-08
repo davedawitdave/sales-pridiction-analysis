@@ -128,6 +128,7 @@ class Cleaner:
         elif method == "median":
             for col in numeric_columns:
                 df[col].fillna(df[col].median(), inplace=True)
+                
         else:
             print("Method unknown")
         
@@ -141,6 +142,7 @@ class Cleaner:
         categorical_columns = self.get_categorical_columns(df)
         for col in categorical_columns:
             df = df[df[col] != 'nan']
+            logger.info("drop NAN columens")
 
         return df
 
@@ -149,6 +151,7 @@ class Cleaner:
         normalize numerical columns
         """
         norm = Normalizer()
+        logger.info("Normalize by Normalizer")
         return pd.DataFrame(norm.fit_transform(df[self.get_numerical_columns(df)]), columns=self.get_numerical_columns(df))
 
     def min_max_scaler(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -156,15 +159,17 @@ class Cleaner:
         scale numerical columns
         """
         minmax_scaler = MinMaxScaler()
+        logger.info("Normalize by MinMaxScaler")
         return pd.DataFrame(minmax_scaler.fit_transform(df[self.get_numerical_columns(df)]), columns=self.get_numerical_columns(df))
-
+       
     def standard_scaler(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         scale numerical columns
         """
         standard_scaler = StandardScaler()
+        logger.info("normailize by StandardScaler")
         return pd.DataFrame(standard_scaler.fit_transform(df[self.get_numerical_columns(df)]), columns=self.get_numerical_columns(df))
-
+        
     def handle_outliers(self, df:pd.DataFrame, col:str, method:str ='IQR') -> pd.DataFrame:
         """
         Handle Outliers of a specified column using Turkey's IQR method
