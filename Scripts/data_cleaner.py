@@ -11,6 +11,7 @@ class Cleaner:
         """
         drop duplicate rows
         """
+        logger.info("drop duplicates columns")
         df.drop_duplicates(inplace=True)
 
         return df
@@ -18,7 +19,7 @@ class Cleaner:
         """
         convert column to datetime
         """
-
+        logger.info("convert to datetime")
         df[columns] = df[columns].apply(pd.to_datetime)
 
         return df
@@ -27,6 +28,7 @@ class Cleaner:
         """
         convert columns to string
         """
+        logger.info("convert to string")
         df[columns] = df[columns].astype(str)
 
         return df
@@ -35,6 +37,7 @@ class Cleaner:
         """
         remove whitespace from columns
         """
+        logger.info("remove the white space from columns")
         df.columns = [column.replace(' ', '_').lower() for column in df.columns]
 
         return df
@@ -46,19 +49,21 @@ class Cleaner:
         totalCells = np.product(df.shape)
         missingCount = df.isnull().sum()
         totalMising = missingCount.sum()
-
+        logger.info("return missing percentage within the datafram")
         return round(totalMising / totalCells * 100, 2)
 
     def get_numerical_columns(self, df: pd.DataFrame) -> list:
         """
         get numerical columns
         """
+        logger.info("return numerical columns")
         return df.select_dtypes(include=['number']).columns.to_list()
 
     def get_categorical_columns(self, df: pd.DataFrame) -> list:
         """
         get categorical columns
         """
+        logger.info("return catagorical columns")
         return  df.select_dtypes(include=['object','datetime64[ns]']).columns.to_list()
 
     def percent_missing_column(self, df: pd.DataFrame, columns:list) -> pd.DataFrame:
@@ -74,6 +79,8 @@ class Cleaner:
                 rows.append([col,col_len,missing_count,round(missing_count / col_len * 100, 2),df[col].dtype])
             except KeyError:
                 rows.append([col,"Not found","Not found","Not found","Not found"])
+        logger.info("calculate missing percnetage by columens")
+
         return pd.DataFrame(data=rows,columns=["Col Name","Total","Missing","%","Data Type"]).sort_values(by="%",ascending=False)
 
             
@@ -92,6 +99,7 @@ class Cleaner:
 
             for col in columns:
                 df[col] = df[col].fillna(method='ffill')
+                logger.info("fill NAN by forward fill")
 
             return df
 
@@ -99,6 +107,7 @@ class Cleaner:
 
             for col in columns:
                 df[col] = df[col].fillna(method='bfill')
+                logger.info("fill NAN by back fill")
 
             return df
 
@@ -106,6 +115,7 @@ class Cleaner:
             
             for col in columns:
                 df[col] = df[col].fillna(df[col].mode()[0])
+                logger.info("fill NAN by mode")
 
             return df
         else:
@@ -124,10 +134,12 @@ class Cleaner:
         if method == "mean":
             for col in numeric_columns:
                 df[col].fillna(df[col].mean(), inplace=True)
+                logger.info("fill NAN by mean")
 
         elif method == "median":
             for col in numeric_columns:
                 df[col].fillna(df[col].median(), inplace=True)
+                logger.info("fill NAN by median")
                 
         else:
             print("Method unknown")
@@ -240,4 +252,5 @@ class Cleaner:
         logger.info("columns successfully removed")
 
         return r_df
+    
 
