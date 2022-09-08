@@ -4,6 +4,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import Normalizer, MinMaxScaler, StandardScaler
+import logger as logger
 class Cleaner:
 
     def drop_duplicate(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -184,7 +185,7 @@ class Cleaner:
         else:
             df[col] = np.where(df[col] < lower_bound, lower_bound, df[col])
             df[col] = np.where(df[col] > upper_bound, upper_bound, df[col])
-        
+        logger.info("outlier handled successfully")
         return df
 
     def fill_mode(self, df, columns):
@@ -192,8 +193,11 @@ class Cleaner:
         for col in columns:
             try:
                 df[col] = df[col].fillna(df[col].mode()[0])
+                logger.info("fill NAN by mode successfull")
             except Exception:
                 print(f'Failed to Fill {col} Data')
+                logger.info("fill NAN by mode unsuccessfull")
+
         return df
     
     def fill_zeros(self, df, columns):
@@ -201,9 +205,34 @@ class Cleaner:
         for col in columns:
             try:
                 df[col] = df[col].fillna(0)
+                logger.info("missing filled by zero")
             except Exception:
                 print(f'Failed to Fill {col} Data')
+                logger.info("fill by zero unsuccessful")
+
         return df
 
+    def rename(self, df, col, old, new):
+        """
+            functions that renames specified list of old values with new ones
+            in a column
+        """
+        for i in range(len(old)):
+            df[col] = df[col].replace([old[i]], new[i])
+            
+        logger.info("values successfully renamed")
 
+        return df
+    def remove_cols(self, df, cols, keep=False):
+        """
+            a functions that removes specified columns from dataframe
+        """
+        if(keep):
+            r_df = df.loc[:,cols]
+        else:
+            r_df = df.drop(cols, axis=1)
+
+        logger.info("columns successfully removed")
+
+        return r_df
 
